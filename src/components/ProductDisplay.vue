@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
+import ReviewForm from '@/components/ReviewForm.vue'
+import ReviewList from '@/components/ReviewList.vue'
 import socksGreenImage from '@/assets/images/socks_green.jpeg'
 import socksBlueImage from '@/assets/images/socks_blue.jpeg'
 
@@ -23,6 +25,8 @@ const variants = ref([
 	{ id: 2234, color: 'green', image: socksGreenImage, quantity: 50 },
 	{ id: 2235, color: 'blue', image: socksBlueImage, quantity: 0 }
 ])
+
+const reviews = ref([])
 
 const title = computed(() => {
 	return brand.value + ' ' + product.value
@@ -50,6 +54,11 @@ const updateVariant = (index) => {
 	selectedVariant.value = index
 }
 
+const addReview = (review) => {
+	reviews.value.push(review)
+	console.log(reviews.value)
+}
+
 </script>
 
 <template>
@@ -69,11 +78,13 @@ const updateVariant = (index) => {
 				</ul>
 				<div v-for="(variant, index) in variants" :key="variant.id" @mouseover="updateVariant(index)"
 					class="color-circle" :style="{ backgroundColor: variant.color }"></div>
-				<button class="button" :class="{disabledButton: !inStock}" v-on:click="addToCart"
+				<button class="button" :class="{ disabledButton: !inStock }" v-on:click="addToCart"
 					:disabled="!inStock">Add to Cart</button>
 
 			</div>
 		</div>
+		<ReviewList :reviews="reviews"></ReviewList>
+		<ReviewForm @review-submitted="addReview"></ReviewForm>
 	</div>
 </template>
 
